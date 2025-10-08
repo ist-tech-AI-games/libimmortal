@@ -11,7 +11,7 @@ class ActionIndex:
 class ObservationIndex:
     GRAPHIC = 0
     VECTOR = 1
-    
+
 class VectorObservationPlayerIndex:
     PLAYER_POSITION_X = 0
     PLAYER_POSITION_Y = 1
@@ -37,3 +37,24 @@ class VectorObservationEnemyIndex:
     ENEMY_VELOCITY_Y = 6
     ENEMY_HEALTH = 7
     ENEMY_STATE = 8
+
+class GraphicObservationColorMap:
+    BLANK = [0, 0, 0]               # Black
+    WALL = [0, 0, 255]              # Blue
+    PLATFORM = [113, 69, 1]         # Purple
+    TURRET = [179, 0, 255]          # Magenta
+    BOMBKID = [255, 2, 0]           # Red
+    SKELETON = [255, 255, 255]      # White
+    ARROW = [255, 255, 0]           # Yellow
+    EXPLOSION = [255, 127, 0]       # Orange
+    KNIGHT = [4, 255, 210]          # Cyan
+    GOAL = [2, 255, 0]              # Green
+    KNIGHT_ATTACK = [128, 128, 204] # Light Blue
+
+__all__ = [
+    "ActionIndex",
+    "ObservationIndex",
+    "VectorObservationPlayerIndex",
+    "VectorObservationEnemyIndex",
+    "GraphicObservationColorMap",
+]
