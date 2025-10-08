@@ -3,6 +3,7 @@ from mlagents_envs.environment import UnityEnvironment, ActionTuple
 from mlagents_envs.side_channel.engine_configuration_channel import EngineConfigurationChannel
 from mlagents_envs.side_channel.environment_parameters_channel import EnvironmentParametersChannel
 from mlagents_envs.envs.unity_gym_env import UnityToGymWrapper
+from .utils import colormap_to_ids_and_onehot
 
 class ImmortalSufferingEnv:
     def __init__(
@@ -78,7 +79,7 @@ class ImmortalSufferingEnv:
             
         return self.env.reset()
     
-    def parse_observation(self, observation: np.ndarray) -> np.ndarray:
+    def _parse_observation(self, observation: np.ndarray) -> np.ndarray:
         return {
             "graphic": observation[0],  # Graphic observation
             "vector": observation[1]    # Vector observation
@@ -86,7 +87,7 @@ class ImmortalSufferingEnv:
 
     def step(self, action: np.ndarray) -> tuple[dict[str, np.ndarray], float, bool, dict]:
         observation, reward, done, info = self.env.step(action)
-        observation = self.parse_observation(observation)
+        observation = self._parse_observation(observation)
         
         return observation, reward, done, info
 
@@ -95,3 +96,42 @@ class ImmortalSufferingEnv:
             print("[INFO] Closing environment...")
             
         self.env.close()
+        
+def main():
+    import tqdm
+    import argparse
+    
+    parser = argparse.ArgumentParser(description="Test Immortal Suffering Environment")
+    parser.add_argument("--game_path", type=str, required=False, default=r"D:\build\Immortal Suffering.exe", help="Path to the Unity executable")
+    parser.add_argument("--port", type=int, required=False, default=5005, help="Port number for the Unity environment and python api to communicate")
+    parser.add_argument("--time_scale", type=float, required=False, default=1.0, help="Speed of the simulation, maximum 2.0")
+    parser.add_argument("--seed", type=int, required=False, default=42, help="Seed that controls enemy spawn")
+    parser.add_argument("--width", type=int, required=False, default=720, help="Visualized game screen width")
+    parser.add_argument("--height", type=int, required=False, default=480, help="Visualized game screen height")
+    parser.add_argument("--verbose", action="store_true", help="Whether to print logs")
+    parser.add_argument("--max_steps", type=int, default=500, help="Number of steps to run the environment")
+    args = parser.parse_args()
+    
+    env = ImmortalSufferingEnv(
+        game_path=args.game_path,
+        port=args.port,
+        time_scale=args.time_scale,
+        seed=args.seed,
+        width=args.width,
+        height=args.height,
+        verbose=args.verbose,
+    )
+
+    MAX_STEPS = args.max_steps
+    obs = env.reset()
+
+    for _ in tqdm.tqdm(range(MAX_STEPS), desc="Stepping through environment"):
+        action = env.env.action_space.sample()
+        obs, reward, done, info = env.step(action)
+        graphic_obs, vector_obs = obs["graphic"], obs["vector"]
+        id_map, graphic_obs = colormap_to_ids_and_onehot(graphic_obs)  # one-hot encoded graphic observation
+
+    env.close()
+
+if __name__ == "__main__":
+    main()
