@@ -1,8 +1,10 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Dict, Tuple, Sequence, Type
+from typing import Dict, Tuple, Sequence, Type, List
 import numpy as np
 from .enums import GraphicObservationColorMap
+import socket
+from contextlib import closing
 
 @dataclass(frozen=True)
 class ColorMapEncoder:
@@ -83,9 +85,28 @@ class ColorMapEncoder:
             img = img.astype(np.uint8, copy=False)
         return img
 
+
 DEFAULT_ENCODER = ColorMapEncoder.from_enum()
+
 
 def colormap_to_ids_and_onehot(img_chw: np.ndarray):
     return DEFAULT_ENCODER.encode(img_chw)
 
-__all__ = ["ColorMapEncoder", "colormap_to_ids_and_onehot"]
+
+def find_free_tcp_port(host: str = "127.0.0.1") -> int:
+    with closing(socket.socket(socket.AF_INET, socket.SOCK_STREAM)) as s:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        s.bind((host, 0))
+        return s.getsockname()[1]
+
+
+def find_n_free_tcp_ports(n: int, host: str = "127.0.0.1") -> List[int]:
+    ports = []
+    for _ in range(n):
+        ports.append(find_free_tcp_port(host))
+    if len(set(ports)) != len(ports):
+        return find_n_free_tcp_ports(n, host)
+    return ports
+
+
+__all__ = ["ColorMapEncoder", "colormap_to_ids_and_onehot", "DEFAULT_ENCODER", "find_free_tcp_port", "find_n_free_tcp_ports"]
