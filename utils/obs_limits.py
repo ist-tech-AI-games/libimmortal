@@ -10,3 +10,5 @@ class ObservationLimits:
     BOMBKID_HEALTH_MAX = 1.0
     TURRET_HEALTH_MIN = 0.0
     TURRET_HEALTH_MAX = 100.0
+    
+__all__ = ["ObservationLimits"]
