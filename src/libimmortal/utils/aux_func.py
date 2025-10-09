@@ -2,7 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, Tuple, Sequence, Type, List
 import numpy as np
-from libimmortal.enums import GraphicObservationColorMap
+from .enums import GraphicObservationColorMap
 import socket
 from contextlib import closing
 

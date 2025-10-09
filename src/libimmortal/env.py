@@ -173,6 +173,10 @@ def main():
 
     MAX_STEPS = args.max_steps
     obs = env.reset()
+    graphic_obs, vector_obs = obs["graphic"], obs["vector"]
+    id_map, graphic_obs = colormap_to_ids_and_onehot(
+        graphic_obs
+    )  # one-hot encoded graphic observation
 
     for _ in tqdm.tqdm(range(MAX_STEPS), desc="Stepping through environment"):
         action = env.env.action_space.sample()
