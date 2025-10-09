@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "libimmortal"
+version = "1.0.0"
+description = "RL-friendly Unity ML-Agents wrapper and utilities"
+readme = "README.md"
+requires-python = ">=3.10,<3.11"
+license = {text = "MIT"}
+authors = [{ name = "Your Name" }]
+
+dependencies = [
+  "numpy>=1.23,<2.0",
+  "pillow>=9",
+  "typing_extensions",
+]
+
+[project.optional-dependencies]
+
+mlagents = [
+  "mlagents==1.1.0",
+  "mlagents-envs==1.1.0",
+]
+viz = [
+  "matplotlib>=3.8",
+  "seaborn>=0.13",
+  "tqdm>=4.66",
+  "wandb>=0.17",
+]
+ray = ["ray>=2.7,<3.0"]
+
+[project.scripts]
+immortal-env = "libimmortal.env:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]

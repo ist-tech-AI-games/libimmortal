@@ -2,15 +2,16 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, Tuple, Sequence, Type, List
 import numpy as np
-from .enums import GraphicObservationColorMap
+from libimmortal.enums import GraphicObservationColorMap
 import socket
 from contextlib import closing
 
+
 @dataclass(frozen=True)
 class ColorMapEncoder:
-    palette: np.ndarray          # (K,3) uint8
-    names: Tuple[str, ...]       # length K
-    name2id: Dict[str, int]      
+    palette: np.ndarray  # (K,3) uint8
+    names: Tuple[str, ...]  # length K
+    name2id: Dict[str, int]
     unknown_id: int
 
     @classmethod
@@ -41,7 +42,9 @@ class ColorMapEncoder:
 
     def encode_ids(self, img: np.ndarray) -> np.ndarray:
         img_hwc = self._to_hwc(img)
-        matches = (img_hwc[..., None, :] == self.palette[None, None, :, :]).all(axis=-1)  # (H,W,K)
+        matches = (img_hwc[..., None, :] == self.palette[None, None, :, :]).all(
+            axis=-1
+        )  # (H,W,K)
         matched_any = matches.any(axis=-1)
         id_map = matches.argmax(axis=-1).astype(np.uint8)
         if not matched_any.all():
@@ -50,7 +53,9 @@ class ColorMapEncoder:
 
     def encode_onehot(self, img: np.ndarray) -> np.ndarray:
         img_hwc = self._to_hwc(img)
-        matches = (img_hwc[..., None, :] == self.palette[None, None, :, :]).all(axis=-1)  # (H,W,K)
+        matches = (img_hwc[..., None, :] == self.palette[None, None, :, :]).all(
+            axis=-1
+        )  # (H,W,K)
         matched_any = matches.any(axis=-1)
         onehot = matches.astype(np.uint8).transpose(2, 0, 1)  # (K,H,W)
         if not matched_any.all():
@@ -60,7 +65,9 @@ class ColorMapEncoder:
 
     def encode(self, img: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         img_hwc = self._to_hwc(img)
-        matches = (img_hwc[..., None, :] == self.palette[None, None, :, :]).all(axis=-1)  # (H,W,K)
+        matches = (img_hwc[..., None, :] == self.palette[None, None, :, :]).all(
+            axis=-1
+        )  # (H,W,K)
         matched_any = matches.any(axis=-1)
 
         id_map = matches.argmax(axis=-1).astype(np.uint8)
@@ -109,4 +116,10 @@ def find_n_free_tcp_ports(n: int, host: str = "127.0.0.1") -> List[int]:
     return ports
 
 
-__all__ = ["ColorMapEncoder", "colormap_to_ids_and_onehot", "DEFAULT_ENCODER", "find_free_tcp_port", "find_n_free_tcp_ports"]
+__all__ = [
+    "ColorMapEncoder",
+    "colormap_to_ids_and_onehot",
+    "DEFAULT_ENCODER",
+    "find_free_tcp_port",
+    "find_n_free_tcp_ports",
+]

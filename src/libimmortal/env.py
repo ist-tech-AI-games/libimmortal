@@ -7,7 +7,7 @@ from mlagents_envs.side_channel.environment_parameters_channel import (
     EnvironmentParametersChannel,
 )
 from mlagents_envs.envs.unity_gym_env import UnityToGymWrapper
-from .utils import colormap_to_ids_and_onehot
+from libimmortal.utils import colormap_to_ids_and_onehot
 
 
 class ImmortalSufferingEnv:
