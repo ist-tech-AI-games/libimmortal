@@ -1,0 +1,17 @@
+version: "1.0"
+
+services:
+  libimmortal:
+    image: libimmortal:1.0
+    container_name: libimortal_1.0
+    environment:
+      - DISPLAY=:99
+      # - XVFB_RES=1600x900x24     # 필요시 해상도 지정 (start_xvfb.sh에서 읽음)
+      # - VNC_PORT=5900            # VNC 쓰면 포트 지정
+    shm_size: "8g"
+    ipc: host
+    tty: true          # -t
+    stdin_open: true   # -i
+    command: ["/usr/local/bin/start_xvfb.sh", "bash"]
+    gpus: all
+    # Add binded volumes as needed
