@@ -87,4 +87,8 @@ CMD ["bash"]
 WORKDIR /root
 
 # Clone libimmortal repo
-RUN git clone https://github.com/ist-tech-AI-games/libimmortal
+COPY . /root/libimmortal
+WORKDIR /root/libimmortal
+RUN pip3 install -e .
+
+WORKDIR /root
