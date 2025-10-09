@@ -1,55 +1,103 @@
-# IST-TECH AI Video Game Project
+# libimmortal: 2025 IST-TECH AI Video Game Project
 
-## :pushpin: Description
+## Introduction
+This is the Python Gym-like API for video game **"Immortal suffering"**
+Make an AI Agent that take out various enemies and reach the goalpoint as fast as possible.
 
-**IST-TECH AI Video Game Project: libimmortal**   
-Python 3 API for Immortal Suffering, built with an OpenAI Gym-like structure for AI and game simulation
+## Installation
 
+### For windows
 
-## :fireworks: Screenshots
+1. Download window build of [immortal suffering](https://github.com/ist-tech-AI-games/immortal_suffering/releases/download/v.1.0/immortal_suffering_windows_x86_64.zip)
 
-TBD
+2. Unzip the immortal_suffering_windows_x86_64.zip
 
-## :sparkles: Skills & Tech Stack
+3. Import conda virtual environment (this might take a while...)
+```
+conda env create -f libimmortal.yaml -n <env_name_here>
+```
 
-1. 프로젝트 관리 : Discord, Github
-2. 커뮤니케이션 : Discord
-3. 개발환경 : Python 3.10
+4. Install libimmortal
+```
+pip install -e .
+```
 
-## :card_file_box: Packages
+5. Install pytorch that are compatible with you local gpu
 
-TBD
+### For Linux
+1. Build docker image
+```sh
+docker build -t libimmortal:1.0 .
+```
 
-## :hammer_and_wrench: Workflow
+2. create docker container
+```sh
+docker compose up -d
+```
 
-1. Commit / PR 컨벤션
-    - `Feat` : 새로운 기능 추가
-    - `Fix` : 버그 수정
-    - `Design` : 디자인 및 UI 수정
-    - `Docs` : 문서 (README, 메뉴얼 등)
-    - `Test` : 테스트 코드
-    - `Refactor` : 코드 리팩토링 (기능 변화 없이 성능 개선)
-    - `Style` : 코드 의미에 영향을 주지 않는 변경 사항
-    - `Chore` : 빌드, 설정 파일
-    - `Comment` : 주석 추가
+3. Access docker container
+## Content
+```sh
+.
+├── docker
+│   └── start_xvfb.sh
+├── docker-compose.yml
+├── Dockerfile
+├── env.py  # This is the environment file
+├── __init__.py
+├── libimmortal.yaml
+├── README.md
+├── requirements.txt
+├── samples
+│   ├── agents.py  # Sample agent will be located here (WIP)
+│   └── __init__.py
+└── utils
+    ├── aux_func.py  # auxilary functions such as feature extraction or finding free ports are located here
+    ├── enums.py  # enums that are useful for feature extraction are located here
+    ├── __init__.py
+    └── obs_limits.py  # limit values for normailization are located here
+```
+## How to run
+```python
+from libimmortal import ImmortalSufferingEnv
+from libimmortal.utils import colormap_to_ids_and_onehot
 
-2. Git 브랜치
-    - `main` : 기본 브랜치
-    - `develop` : 개발된 기능(feature)을 통합하는 브랜치
-    - `docs` : 문서작업 브랜치
-    - `feat/[issue_num]-[function name]` : 각 기능별 개발을 진행하는 브랜치
-    - `bug/[issue_num]-[bug name]` : 버그 해결용 브랜치
-    - `test/[name]` : 테스트용 브랜치
+env = ImmortalSufferingEnv(
+    game_path=args.game_path,  # Put you game path here. (For windows, <path -for-Immortal Suffering.exe>. For linux, <path-for immortal_suffering_linux_build.x86_64>)
+    port=args.port,  # you can use immortal_suffering.utils.aux_func.find_free_tcp_port() to find free usable port 
+    time_scale=args.time_scale,  # 1.0~2.0 is recommended
+    seed=args.seed,  # integer seed that determines enemy spawn position and type
+    width=args.width,  # Game play screen width (only for visualization)
+    height=args.height,  # Game play screen height (only for visualization)
+    verbose=args.verbose,  # Whether to print logs or not
+)
 
+MAX_STEPS = args.max_steps
+obs = env.reset()
+graphic_obs, vector_obs = obs["graphic"], obs["vector"]
+    id_map, graphic_obs = colormap_to_ids_and_onehot(
+        graphic_obs
+    )  # one-hot encoded graphic observation
 
-## :fountain_pen: Authors
-- PM: 이윤혁
-- 프로그래밍: 이윤혁, 정윤제
+for _ in tqdm.tqdm(range(MAX_STEPS), desc="Stepping through environment"):
+    action = env.env.action_space.sample()  # Change here with your AI agent
+    obs, reward, done, info = env.step(action)
+    graphic_obs, vector_obs = obs["graphic"], obs["vector"]
+    id_map, graphic_obs = colormap_to_ids_and_onehot(
+        graphic_obs
+    )  # one-hot encoded graphic observation
 
-## :books: Documentation
+env.close()
+```
 
-TBD
-
-## :lock_with_ink_pen: License
-
-TBD
+## Tips for Reinforcement Learning
+1. **Parallel episode collection**  
+Included parallel processing library **"ray"**.  
+Immortal suffering supports parallel running.
+2. **Reward shaping**  
+The default reward only gives 1 when goal is reached, else 0.  
+Modify reward fucntion using given observations.
+3. **Feature extraction**  
+Both graphic observation and vector observation are provided in obs.
+4. **Monitor training process with visualization**  
+Included training visualizing library "tensorflow" and "wandb"
