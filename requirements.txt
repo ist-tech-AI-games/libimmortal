@@ -1,0 +1,11 @@
+wandb==0.17.4
+matplotlib
+seaborn
+numpy==1.23.5
+nvitop
+scikit-learn
+tqdm
+ray
+lz4
+mlagents==1.1.0
+mlagents-envs==1.1.0
