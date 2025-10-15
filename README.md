@@ -9,7 +9,7 @@ Make an AI Agent that take out various enemies and reach the goalpoint as fast a
 ### For windows
 
 1. Download window build of [immortal suffering](https://github.com/ist-tech-AI-games/immortal_suffering/releases/download/v.1.0/immortal_suffering_windows_x86_64.zip)  
-**KNOWN ISSUE**: Windows 11 Defender misdianosis the build file as a trojan.  
+**KNOWN ISSUE**: Windows 11 Defender misdianoses the build file as a trojan.  
 It is a false positive, so it is **safe to use**. 
 
 2. Unzip the immortal_suffering_windows_x86_64.zip
