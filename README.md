@@ -8,7 +8,9 @@ Make an AI Agent that take out various enemies and reach the goalpoint as fast a
 
 ### For windows
 
-1. Download window build of [immortal suffering](https://github.com/ist-tech-AI-games/immortal_suffering/releases/download/v.1.0/immortal_suffering_windows_x86_64.zip)
+1. Download window build of [immortal suffering](https://github.com/ist-tech-AI-games/immortal_suffering/releases/download/v.1.0/immortal_suffering_windows_x86_64.zip)  
+**KNOWN ISSUE**: Windows 11 Defender misdianosis the build file as a trojan.  
+It is a false positive, so it is **safe to use**. 
 
 2. Unzip the immortal_suffering_windows_x86_64.zip
 
@@ -90,10 +92,62 @@ for _ in tqdm.tqdm(range(MAX_STEPS), desc="Stepping through environment"):
 env.close()
 ```
 
+## Observation
+there are two observations that are provided from the environment.
+**Graphic observation**, **Vector observation**
+
+### Graphic Observation
+Graphic Observation is ```3 (RGB channel) x 90 (Height) x 160 (Width)-dimensional tensor```.  
+This is the downscaled image of the game screen, and the game entities are drawn with specific color, which can be mapped as id.  
+There is a utility function(```libimmortal.utils.colormap_to_ids_and_onehot```) that maps raw graphic observation to one-hot encoded id tensor map.
+
+### Vector Observation
+Vector Observation is a ```103-dimensional vector```.  
+This contains player-related informations and enemy-related infomations.  
+
+```python
+obs, reward, done, info = env.step(action)
+graphic_obs, vector_obs = obs["graphic"], obs["vector"]
+player_obs = vector_obs[0:13]
+enemy_obs = vector_obs[13:103]
+
+player_obs = [
+    PLAYER_POSITION_X, 
+    PLAYER_POSITION_Y, 
+    PLAYER_VELOCITY_X, 
+    PLAYER_VELOCITY_Y,
+    PLAYER_CULULATED_DAMAGE,
+    PLAYER_IS_ACTIONABLE,
+    PLAYER_IS_HITTING,
+    PLAYER_IS_DOBBLE_JUMP_AVAILABLE,
+    PLAYER_IS_ATTACKABLE,
+    GOAL_POSITION_X,
+    GOAL_POSITION_Y,
+    GOAL_PLAYER_DISTANCE,
+    TIME_ELAPSED
+    ]
+
+enemy_obs = [
+    ENEMY_TYPE_SKELETON,
+    ENEMY_TYPE_BOMBKID,
+    ENEMY_TYPE_TURRET,
+    ENEMY_POSITION_X,
+    ENEMY_POSITION_Y,
+    ENEMY_VELOCITY_X,
+    ENEMY_VELOCITY_Y,
+    ENEMY_HEALTH,
+    ENEMY_STATE
+] * 10
+```
+
+Observation of 10 enemies is seriealized in ```vector_obs[13:103]```, if there is less then 10 enemies, the back of the ```enemy_obs``` vector is zero-padded at the tail.
+
+
 ## Tips for Reinforcement Learning
 1. **Parallel episode collection**  
 Included parallel processing library **"ray"**.  
-Immortal suffering supports parallel running.
+Immortal suffering supports parallel running.  
+Also there is a utility function(```libimmortal.utils.find_free_tcp_port```, ```libimmortal.utils.find_n_free_tcp_ports```) to find free ports for connecting Immortal Suffering and libimmortal Python API.
 2. **Reward shaping**  
 The default reward only gives 1 when goal is reached, else 0.  
 Modify reward fucntion using given observations.
