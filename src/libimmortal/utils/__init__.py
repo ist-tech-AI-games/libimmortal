@@ -11,6 +11,7 @@ from .aux_func import (
     DEFAULT_ENCODER,
     find_free_tcp_port,
     find_n_free_tcp_ports,
+    parse_observation,
 )
 from .obs_limits import ObservationLimits
 
@@ -26,4 +27,5 @@ __all__ = [
     "ObservationLimits",
     "find_free_tcp_port",
     "find_n_free_tcp_ports",
+    "parse_observation"
 ]

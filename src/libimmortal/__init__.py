@@ -10,6 +10,7 @@ from libimmortal.utils import (
     DEFAULT_ENCODER,
     find_free_tcp_port,
     find_n_free_tcp_ports,
+    parse_observation,
     ObservationLimits,
 )
 
@@ -26,6 +27,7 @@ __all__ = [
     "ObservationLimits",
     "find_free_tcp_port",
     "find_n_free_tcp_ports",
+    "parse_observation"
 ]
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
