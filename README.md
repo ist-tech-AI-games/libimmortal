@@ -29,7 +29,7 @@ pip install -e .
 ### For Linux
 1. Build docker image
 ```sh
-docker build -t libimmortal:1.0 .
+docker build -t libimmortal:1.0.1 .
 ```
 
 2. create docker container
