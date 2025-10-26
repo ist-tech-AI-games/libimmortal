@@ -39,16 +39,16 @@ docker compose up -d
 
 3. Access docker container
 ## Patch Note
-- v1.0
-Known issue: Sprite rendering error while on animation playing
-Known issue: Unity Major security issue(CVE-2025-59489)
+- v1.0  
+Known issue: Sprite rendering error while on animation playing  
+Known issue: Unity Major security issue(CVE-2025-59489)  
 
-- v1.0.1
-Upgraded MLAgent from 3.0.0 to 4.0.0
-Migrated Sentis to Inference engine
-Updated Unity Version to correspond security issue
-Handled sprite rendering error while on animation playing
-Added Obs parsing function ```libimmortal.utils.parse_observation```
+- v1.0.1  
+Upgraded MLAgent from 3.0.0 to 4.0.0  
+Migrated Sentis to Inference engine  
+Updated Unity Version to correspond security issue  
+Handled sprite rendering error while on animation playing  
+Added Obs parsing function ```libimmortal.utils.parse_observation```  
 
 ## Content
 ```sh
