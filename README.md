@@ -8,7 +8,7 @@ Make an AI Agent that take out various enemies and reach the goalpoint as fast a
 
 ### For windows
 
-1. Download window build of [immortal suffering](https://github.com/ist-tech-AI-games/immortal_suffering/releases/download/v.1.0/immortal_suffering_windows_x86_64.zip)  
+1. Download window build of [immortal suffering](https://github.com/ist-tech-AI-games/immortal_suffering/releases/download/v.1.0.1/immortal_suffering_windows_x86_64.zip)  
 **KNOWN ISSUE**: Windows 11 Defender misdianoses the build file as a trojan.  
 It is a false positive, so it is **safe to use**. 
 
@@ -38,6 +38,18 @@ docker compose up -d
 ```
 
 3. Access docker container
+## Patch Note
+- v1.0
+Known issue: Sprite rendering error while on animation playing
+Known issue: Unity Major security issue(CVE-2025-59489)
+
+- v1.0.1
+Upgraded MLAgent from 3.0.0 to 4.0.0
+Migrated Sentis to Inference engine
+Updated Unity Version to correspond security issue
+Handled sprite rendering error while on animation playing
+Added Obs parsing function ```libimmortal.utils.parse_observation```
+
 ## Content
 ```sh
 .
@@ -62,7 +74,7 @@ docker compose up -d
 ## How to run
 ```python
 from libimmortal import ImmortalSufferingEnv
-from libimmortal.utils import colormap_to_ids_and_onehot
+from libimmortal.utils import colormap_to_ids_and_onehot, parse_observation
 
 env = ImmortalSufferingEnv(
     game_path=args.game_path,  # Put you game path here. (For windows, <path -for-Immortal Suffering.exe>. For linux, <path-for immortal_suffering_linux_build.x86_64>)
@@ -76,7 +88,7 @@ env = ImmortalSufferingEnv(
 
 MAX_STEPS = args.max_steps
 obs = env.reset()
-graphic_obs, vector_obs = obs["graphic"], obs["vector"]
+graphic_obs, vector_obs = parse_observation(obs)
     id_map, graphic_obs = colormap_to_ids_and_onehot(
         graphic_obs
     )  # one-hot encoded graphic observation
@@ -84,7 +96,7 @@ graphic_obs, vector_obs = obs["graphic"], obs["vector"]
 for _ in tqdm.tqdm(range(MAX_STEPS), desc="Stepping through environment"):
     action = env.env.action_space.sample()  # Change here with your AI agent
     obs, reward, done, info = env.step(action)
-    graphic_obs, vector_obs = obs["graphic"], obs["vector"]
+    graphic_obs, vector_obs = parse_observation(obs)
     id_map, graphic_obs = colormap_to_ids_and_onehot(
         graphic_obs
     )  # one-hot encoded graphic observation

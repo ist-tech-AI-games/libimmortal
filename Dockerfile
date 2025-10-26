@@ -42,7 +42,6 @@ RUN set -euo pipefail && \
     /usr/local/bin/python3.10 -m pip install -U pip setuptools wheel && \
     cd / && rm -rf /tmp/Python-${PY_VER} /tmp/Python-${PY_VER}.tgz
 
-# 편의용 심볼릭 링크 (컨테이너 내부 기본 python/pip을 3.10로 사용)
 RUN ln -sf /usr/local/bin/python3.10 /usr/local/bin/python3 && \
     ln -sf /usr/local/bin/pip3.10    /usr/local/bin/pip3
 
@@ -62,7 +61,7 @@ RUN rm /root/requirements.txt
 RUN pip3 install torch==2.1.1 torchvision==0.16.1 torchaudio==2.1.1 --index-url https://download.pytorch.org/whl/cu121
 
 # Download linux game build
-RUN wget https://github.com/ist-tech-AI-games/immortal_suffering/releases/download/v.1.0/immortal_suffering_linux_x86_64.zip
+RUN wget https://github.com/ist-tech-AI-games/immortal_suffering/releases/download/v1.0.1/immortal_suffering_linux_x86_64.zip
 RUN unzip immortal_suffering_linux_x86_64.zip -d /root/immortal_suffering
 RUN chmod -R 755 /root/immortal_suffering/immortal_suffering_linux_build.x86_64
 

@@ -1,6 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
-from typing import Dict, Tuple, Sequence, Type, List
+from typing import Dict, Tuple, Sequence, Type, List, Union
 import numpy as np
 from .enums import GraphicObservationColorMap
 import socket
@@ -115,6 +115,19 @@ def find_n_free_tcp_ports(n: int, host: str = "127.0.0.1") -> List[int]:
         return find_n_free_tcp_ports(n, host)
     return ports
 
+
+def parse_observation(
+    observation: Union[Dict[str, np.ndarray], List[np.ndarray]],
+) -> Tuple[np.ndarray, np.ndarray]:
+    if isinstance(observation, dict):
+        graphic_obs = observation["graphic"]
+        vector_obs = observation["vector"]
+    elif isinstance(observation, list) and len(observation) == 2:
+        graphic_obs, vector_obs = observation
+    else:
+        raise ValueError("Invalid observation format")
+
+    return graphic_obs, vector_obs
 
 __all__ = [
     "ColorMapEncoder",

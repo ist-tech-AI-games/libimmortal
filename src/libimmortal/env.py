@@ -7,7 +7,7 @@ from mlagents_envs.side_channel.environment_parameters_channel import (
     EnvironmentParametersChannel,
 )
 from mlagents_envs.envs.unity_gym_env import UnityToGymWrapper
-from libimmortal.utils import colormap_to_ids_and_onehot
+from libimmortal.utils import colormap_to_ids_and_onehot, parse_observation
 
 
 class ImmortalSufferingEnv:
@@ -173,7 +173,7 @@ def main():
 
     MAX_STEPS = args.max_steps
     obs = env.reset()
-    graphic_obs, vector_obs = obs["graphic"], obs["vector"]
+    graphic_obs, vector_obs = parse_observation(obs)
     id_map, graphic_obs = colormap_to_ids_and_onehot(
         graphic_obs
     )  # one-hot encoded graphic observation
@@ -181,7 +181,7 @@ def main():
     for _ in tqdm.tqdm(range(MAX_STEPS), desc="Stepping through environment"):
         action = env.env.action_space.sample()
         obs, reward, done, info = env.step(action)
-        graphic_obs, vector_obs = obs["graphic"], obs["vector"]
+        graphic_obs, vector_obs = parse_observation(obs)
         id_map, graphic_obs = colormap_to_ids_and_onehot(
             graphic_obs
         )  # one-hot encoded graphic observation
