@@ -35,7 +35,7 @@ def main():
         "--time_scale",
         type=float,
         required=False,
-        default=1.0,
+        default=1.0,  # !NOTE: This will be set as 1.0 in assessment
         help="Speed of the simulation, maximum 2.0",
     )
     parser.add_argument(
@@ -63,7 +63,7 @@ def main():
     parser.add_argument(
         "--max_steps",
         type=int,
-        default=500,
+        default=18000,  # !NOTE: This will be set as 18000 (5 minutes in real-time) in assessment
         help="Number of steps to run the environment",
     )
     
@@ -79,8 +79,8 @@ def main():
     env = ImmortalSufferingEnv(
         game_path=args.game_path,
         port=args.port,
-        time_scale=args.time_scale,  # this will be set as 1.0 in assessment
-        seed=args.seed,  # this will be set as random number in assessment
+        time_scale=args.time_scale,  # !NOTE: This will be set as 1.0 in assessment
+        seed=args.seed,  # !NOTE: This will be set as random number in assessment
         width=args.width,
         height=args.height,
         verbose=args.verbose,
