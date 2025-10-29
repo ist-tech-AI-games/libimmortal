@@ -101,7 +101,7 @@ for _ in tqdm.tqdm(range(MAX_STEPS), desc="Stepping through environment"):
         graphic_obs
     )  # one-hot encoded graphic observation
 
-env.close()
+env.close()  # !NECESSARY TO CLOSE AFTER 1 ENV RUN
 ```
 
 ## Observation
