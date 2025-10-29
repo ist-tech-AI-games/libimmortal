@@ -95,7 +95,7 @@ graphic_obs, vector_obs = parse_observation(obs)
 
 for _ in tqdm.tqdm(range(MAX_STEPS), desc="Stepping through environment"):
     action = env.env.action_space.sample()  # Change here with your AI agent
-    obs, reward, done, info = env.step(action)
+    obs, reward, done, info = env.step(action)  # Receive reward 1 if player Goal, else 0
     graphic_obs, vector_obs = parse_observation(obs)
     id_map, graphic_obs = colormap_to_ids_and_onehot(
         graphic_obs
